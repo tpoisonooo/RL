@@ -16,7 +16,15 @@ import os
 
 
 def import_model_from_hf_name(hf_model_name: str, output_path: str):
-    if "llama" in hf_model_name.lower():
+    if "nemotron" in hf_model_name.lower() and "llama" in hf_model_name.lower():
+        from nemo.tron.converter.llama_nemotron import HFLlamaNemotronImporter
+        
+        print(f" Importing model {hf_model_name} to {output_path}...")
+        importer = HFLlamaNemotronImporter(
+            hf_model_name,
+            output_path=output_path,
+        )
+    elif "llama" in hf_model_name.lower():
         from nemo.tron.converter.llama import HFLlamaImporter
 
         print(f"Importing model {hf_model_name} to {output_path}...")
