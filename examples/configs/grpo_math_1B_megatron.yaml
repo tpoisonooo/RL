@@ -31,7 +31,7 @@ checkpointing:
   save_period: 10
 
 policy:
-  model_name: "Qwen/Qwen2.5-1.5B"
+  model_name: "/home/data/share/Qwen2.5-1.5B-Instruct"
   tokenizer:
     name: ${policy.model_name} ## specify if you'd like to use a tokenizer different from the model's default
   train_global_batch_size: 512
