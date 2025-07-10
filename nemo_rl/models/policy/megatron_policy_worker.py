@@ -412,7 +412,6 @@ class MegatronPolicyWorker:
         if os.path.exists(hf_model_name):
             hf_model_subdir = f"model_{hf_model_subdir.replace('/', '_')}"
 
-        megatron_checkpoint_home = "/lustre/fsw/coreai_dlalgo_llm/jiemingz/rl/mcore_ckpts"
         if megatron_checkpoint_home is not None:
             pretrained_path = f"{megatron_checkpoint_home}/{hf_model_subdir}"
         else:
