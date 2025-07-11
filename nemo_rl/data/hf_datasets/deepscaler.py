@@ -65,4 +65,17 @@ class DeepScalerDataset:
         train_formatted = train_ds.map(format_math, remove_columns=train_ds.column_names)
         val_formatted = val_ds.map(format_math, remove_columns=val_ds.column_names)
 
-        # Compute accuracy 16 times per sample (matching
+        # Compute accuracy 16 times per sample (matching the DeepScaleR evaluation setting)
+        val_repeated = []
+        for _ in range(16):
+            val_repeated.extend(val_formatted)
+        val_formatted = val_formatted.from_list(val_repeated)
+
+        self.formatted_ds = {
+            "train": train_formatted,
+            "validation": val_formatted,
+        }
+
+        self.task_spec = TaskDataSpec(
+            task_name="DeepScaler",
+        )

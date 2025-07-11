@@ -34,8 +34,8 @@ EOF
 ARG UV_VERSION=0.7.2
 ARG PYTHON_VERSION=3.12
 ENV PATH="/root/.local/bin:$PATH"
-RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | sh && \
-    uv python install ${PYTHON_VERSION}
+RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | sh && uv python install ${PYTHON_VERSION}
+# RUN python -m pip install uv==${UV_VERSION} && uv python install ${PYTHON_VERSION}
 
 # Disable usage stats by default for users who are sensitive to sharing usage.
 # Users are encouraged to enable if the wish.
