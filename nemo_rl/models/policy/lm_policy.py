@@ -526,7 +526,10 @@ class Policy(ColocatablePolicyInterface, GenerationInterface):
         the object is lost due to leaving a function scope. It's always recommended that the
         user calls worker_group.shutdown().
         """
-        self.worker_group.shutdown()
+        try:
+            self.worker_group.shutdown()
+        except Exception as e:
+            print(f"Error during policy __del__: {e}")
 
     def start_gpu_profiling(self) -> None:
         """Start GPU profiling."""

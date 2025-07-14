@@ -2329,6 +2329,7 @@ dependencies = [
     { name = "transformers" },
     { name = "triton" },
     { name = "wandb" },
+    { name = "zarr" },
 ]
 
 [package.optional-dependencies]
@@ -2411,6 +2412,7 @@ requires-dist = [
     { name = "triton", index = "https://download.pytorch.org/whl/cu128" },
     { name = "vllm", marker = "extra == 'vllm'", specifier = "==0.9.0" },
     { name = "wandb" },
+    { name = "zarr", specifier = ">=3.0.8" },
 ]
 provides-extras = ["automodel", "vllm", "mcore"]
 

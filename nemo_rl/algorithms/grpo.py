@@ -320,6 +320,8 @@ def setup(
             f"  ✓ Using vLLM backend for generation with {policy_config['model_name']}"
         )
 
+    # import pdb
+    # pdb.set_trace()  # noqa: E702
     if last_checkpoint_path:
         weights_path = Path(last_checkpoint_path) / "policy" / "weights"
         optimizer_path = Path(last_checkpoint_path) / "policy" / "optimizer"
@@ -335,6 +337,7 @@ def setup(
         optimizer_path=optimizer_path,
         init_optimizer=True,
     )
+
 
     # if it is not colocated inference, initialize collective communication for update weights
     if not colocated_inference:
