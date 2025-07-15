@@ -355,7 +355,7 @@ class MegatronPolicyWorker:
         *,
         worker_sharding_annotations: NamedSharding,
         pre_init_communication_queue: Queue,
-        megatron_checkpoint_home: Optional[str] = None,
+        megatron_checkpoint_home: Optional[str] = '/data/khj/workspace/RL/megatron_checkpoints_home',
         **kwargs: Any,
     ):
         self.cfg = config
