@@ -54,7 +54,7 @@ policy:
     enabled: False
 
   sequence_packing:
-    enabled: False # coming soon
+    enabled: True # coming soon
     train_mb_tokens: ${mul:${policy.max_total_sequence_length}, ${policy.train_micro_batch_size}}
     logprob_mb_tokens: ${mul:${policy.max_total_sequence_length}, ${policy.logprob_batch_size}}
     algorithm: "modified_ffd"
@@ -82,7 +82,7 @@ policy:
     pipeline_dtype: ${policy.precision}
     sequence_parallel: false
     freeze_moe_router: true
-    moe_router_dtype: "fp64"
+    moe_router_dtype: "fp32"
     moe_router_load_balancing_type: "none" # "seq_aux_loss" causes logprob error divergence for grpo
     moe_router_bias_update_rate: 0.0 # by default, disable bias updates for grpo
     #gives ~20% training perf speedup with sequence packing 
@@ -138,6 +138,7 @@ policy:
       tensor_parallel_size: 1
       gpu_memory_utilization: 0.6
       max_model_len: ${policy.max_total_sequence_length}
+      async_engine: true
 
 data:
   max_input_seq_length: ${policy.max_total_sequence_length} # upper bound, real truncation occurs at vllm.max_model_len
@@ -153,7 +154,7 @@ logger:
   log_dir: "logs"  # Base directory for all logs
   num_val_samples_to_print: 0 # Number of validation samples to pretty print on terminal
   wandb_enabled: false
-  tensorboard_enabled: false
+  tensorboard_enabled: true
   monitor_gpus: false  # If true, will monitor GPU usage and log to wandb and/or tensorboard
   wandb:
     project: "grpo-dev"
