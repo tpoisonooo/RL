@@ -79,6 +79,11 @@ def init_ray(log_dir: Optional[str] = None) -> None:
     # Set up runtime environment
     env_vars = dict(os.environ)
     env_vars.pop("RAY_EXPERIMENTAL_NOSET_CUDA_VISIBLE_DEVICES", None)
+    # env_vars['PYTHONHOME'] = '/home/khj/miniconda3/'
+    # import sys
+    # env_vars['PATH'] = ':'.join(sys.path)
+    # env_vars['EXECUTABLE'] = ':'.join(sys.executable)
+    # env_vars.push("conda", 'base')
     runtime_env = {
         "env_vars": env_vars,  # Pass thru all user environment variables
     }

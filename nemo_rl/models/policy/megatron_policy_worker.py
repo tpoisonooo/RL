@@ -54,6 +54,9 @@ from megatron.inference.text_generation.mcore_engine_server import (
     run_mcore_engine,
 )
 from megatron.training.utils import get_ltor_masks_and_position_ids
+import sys
+print("!!!Ray Python executable:", sys.executable)
+print("!!!Ray sys.path:", sys.path)
 from nemo.tron import fault_tolerance
 from nemo.tron.checkpointing import checkpoint_exists, load_checkpoint, save_checkpoint
 from nemo.tron.config import (
@@ -352,7 +355,7 @@ class MegatronPolicyWorker:
         *,
         worker_sharding_annotations: NamedSharding,
         pre_init_communication_queue: Queue,
-        megatron_checkpoint_home: Optional[str] = None,
+        megatron_checkpoint_home: Optional[str] = '/data/khj/workspace/RL/megatron_checkpoints_home',
         **kwargs: Any,
     ):
         self.cfg = config
