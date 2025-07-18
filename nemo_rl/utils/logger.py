@@ -134,7 +134,6 @@ class TensorboardLogger(LoggerInterface):
         """
         self.writer.add_figure(name, figure, step)
 
-
 class WandbLogger(LoggerInterface):
     """Weights & Biases logger backend."""
 

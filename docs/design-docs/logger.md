@@ -38,8 +38,13 @@ A {py:class}`Logger <nemo_rl.utils.logger.Logger>` wrapper class will also imple
 logging_config = {
     "wandb_enabled": True,
     "tensorboard_enabled": False,
+    "swanlab_enabled": False,
 
     "wandb": {
+        "project": "grpo-dev",
+        "name": "grpo-dev-logging",
+    },
+    "swanlab": {
         "project": "grpo-dev",
         "name": "grpo-dev-logging",
     },

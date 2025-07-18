@@ -1,30 +1,30 @@
 # SFT Algorithm Configuration
 sft:
-  max_num_epochs: 1
+  max_num_epochs: 3
   max_num_steps: 1000000
   val_period: 500
   val_batches: 4
-  val_global_batch_size: 128
+  val_global_batch_size: 32
   val_micro_batch_size: 2
   val_at_start: true
   seed: 42
 
 checkpointing:
   enabled: true
-  checkpoint_dir: "results/sft_openmathinstruct2"
+  checkpoint_dir: "results/seedllm"
   metric_name: "val_loss"
   higher_is_better: false
   keep_top_k: 100
   save_period: 500
 
 policy:
-  model_name: "/fs-computility/ai4agr/shared/Qwen2.5-1_5B-Instruct"
+  model_name: "/fs-computility/ai4agr/shared/Qwen2.5-7B-Instruct"
   tokenizer:
     name: ${policy.model_name} ## specify if you'd like to use a tokenizer different from the model's default
-  train_global_batch_size: 128
-  train_micro_batch_size: 4
-  logprob_batch_size: 4
-  max_total_sequence_length: 4096
+  train_global_batch_size: 32
+  train_micro_batch_size: 2
+  logprob_batch_size: 1
+  max_total_sequence_length: 12288
   precision: "bfloat16"
   fsdp_offload_enabled: false
   activation_checkpointing_enabled: false
@@ -34,7 +34,7 @@ policy:
     cpu_offload: false
     sequence_parallel: false
     activation_checkpointing: false
-    tensor_parallel_size: 1
+    tensor_parallel_size: 2
     context_parallel_size: 1
     custom_parallel_plan: null
 
@@ -44,14 +44,14 @@ policy:
   # makes the training sequence length divisible by the tensor parallel size
   # this is useful for sequence parallel training
   make_sequence_length_divisible_by: ${policy.dtensor_cfg.tensor_parallel_size}
-  max_grad_norm: 1.0
+  max_grad_norm: 0.4
 
   megatron_cfg:
     enabled: true
     empty_unused_memory_level: 0
     activation_checkpointing: false
     converter_type: "Qwen2ForCausalLM"
-    tensor_model_parallel_size: 1
+    tensor_model_parallel_size: 4
     expert_tensor_parallel_size: 1
     expert_model_parallel_size: 1
     pipeline_model_parallel_size: 1
@@ -106,11 +106,10 @@ policy:
       average_in_collective: true
       use_custom_fsdp: false
       data_parallel_sharding_strategy: "optim_grads_params"
-
   optimizer:
     name: "torch.optim.AdamW"
     kwargs:
-      lr: 2e-5
+      lr: 5e-6
       weight_decay: 0.01
       betas: [0.9, 0.98]
       eps: 1e-8
@@ -121,13 +120,13 @@ policy:
 
 data:
   max_input_seq_length: ${policy.max_total_sequence_length}
-  dataset_name: "/fs-computility/ai4agr/shared/openmathinstruct2"
-  prompt_file: examples/prompts/math.txt
-  split: "train_1M"
+  dataset_name: "/tos-bjml-ai4agr/konghuanjun/clean/v6/seedllm_train_openai_format.jsonl"
+  train_data_path: "/tos-bjml-ai4agr/konghuanjun/clean/v6/seedllm_train_openai_format.jsonl"
+  val_data_path: "/tos-bjml-ai4agr/konghuanjun/clean/v6/seedllm_val_openai_format.jsonl"
+
   add_bos: true
   add_eos: true
   add_generation_prompt: true
-  output_key: 'generated_solution'
 
 logger:
   log_dir: "logs"  # Base directory for all logs
@@ -136,9 +135,9 @@ logger:
   monitor_gpus: false  # If true, will monitor GPU usage and log to wandb and/or tensorboard
   wandb:
     project: "sft-dev"
-    name: "openmathinstruct-nemorl-1M_train"
+    name: "seedllm0718"
   tensorboard:
-    log_dir: "tb_logs-openmathinstruct-nemorl-1M_train"
+    log_dir: "seedllm0718"
   gpu_monitoring:
     collection_interval: 10  # How often to collect GPU usage metrics (in seconds)
     flush_interval: 10  # How often to flush GPU usage metrics to the loggers (in seconds)

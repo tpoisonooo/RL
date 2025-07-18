@@ -1,3 +1,4 @@
+
 # Copyright (c) 2025, NVIDIA CORPORATION.  All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,6 +45,7 @@ def prepare_openinstructmath2_dataset(
     seed: int = 42,
     test_size: float = 0.05,
     output_key: str = "expected_answer",
+    repo_id: str = "nvidia/OpenMathInstruct-2",
 ) -> dict[str, Dataset | None]:
     """Load and split the OpenMathInstruct-2 dataset into train and validation sets using HF's train_test_split."""
     print(
@@ -51,7 +53,7 @@ def prepare_openinstructmath2_dataset(
     )
 
     # Load the original dataset
-    original_ds = load_dataset("nvidia/OpenMathInstruct-2", split=split)
+    original_ds = load_dataset(repo_id, split=split)
 
     # Split into train and validation sets using HF's train_test_split
     split_ds = original_ds.train_test_split(test_size=test_size, seed=seed)
@@ -81,6 +83,7 @@ class OpenMathInstruct2Dataset:
         seed: int = 42,
         test_size: float = 0.05,
         output_key: str = "expected_answer",
+        repo_id: Optional[str] = "nvidia/OpenMathInstruct-2",
         prompt_file: Optional[str] = None,
     ):
         """Initialize the OpenMathInstruct2 dataset with train/validation split.
@@ -96,7 +99,7 @@ class OpenMathInstruct2Dataset:
             )
 
         self.formatted_ds = prepare_openinstructmath2_dataset(
-            split=split, seed=seed, test_size=test_size, output_key=output_key
+            split=split, seed=seed, test_size=test_size, output_key=output_key, repo_id=repo_id
         )
 
         self.task_spec = TaskDataSpec(

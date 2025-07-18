@@ -91,7 +91,7 @@ def sft_preprocessor(
 
 def setup_data(tokenizer: AutoTokenizer, data_config: DataConfig):
     print("\n▶ Setting up data...")
-    data_cls = data_config["dataset_name"]
+    data_cls = data_config["dataset_name"].lower()
     if data_cls == "open_assistant":
         data = hf_datasets.OasstDataset(output_dir="/tmp/open_assistant")
     elif data_cls == "squad":
@@ -103,19 +103,18 @@ def setup_data(tokenizer: AutoTokenizer, data_config: DataConfig):
             data_config["input_key"],
             data_config["output_key"],
         )
-    elif data_cls == "openmathinstruct2":
+    elif "openmathinstruct2" in data_cls:
         data = hf_datasets.OpenMathInstruct2Dataset(
             split=data_config["split"],
             output_key=data_config["output_key"],
             prompt_file=data_config["prompt_file"],
+            repo_id=data_config["dataset_name"]
         )
-    elif data_cls == "openai_format":
+    elif "openai_format" in data_cls:
         data = hf_datasets.OpenAIFormatDataset(
             data_config["train_data_path"],
             data_config["val_data_path"],
-            data_config["chat_key"],
-            data_config["system_key"],
-            data_config["system_prompt"],
+            **{k: data_config[k] for k in ("chat_key", "system_key", "system_prompt") if k in data_config}
         )
     else:
         raise ValueError(f"Unknown dataset class: {data_cls}")

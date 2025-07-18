@@ -356,7 +356,7 @@ class MegatronPolicyWorker:
         *,
         worker_sharding_annotations: NamedSharding,
         pre_init_communication_queue: Queue,
-        megatron_checkpoint_home: Optional[str] = None,
+        megatron_checkpoint_home: Optional[str] = '/fs-computility/ai4agr/konghuanjun/RL/megatron_checkpoints_home',
         **kwargs: Any,
     ):
         self.cfg = config

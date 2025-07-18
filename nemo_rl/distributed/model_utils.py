@@ -99,7 +99,7 @@ class DistributedLogprob(torch.autograd.Function):
         return log_probs
 
     @staticmethod
-    def backward(
+    def baseline_backward(
         ctx: Any,
         *grad_outputs: torch.Tensor,
     ) -> tuple[torch.Tensor, None, None, None, None, None, None]:
@@ -111,7 +111,6 @@ class DistributedLogprob(torch.autograd.Function):
         is_chosen = (~target_mask).unsqueeze(-1) * torch.nn.functional.one_hot(
             masked_target, num_classes=partition_vocab_size
         )
-
         grad_input = is_chosen.float().sub_(softmax)
 
         grad_input.mul_(grad_output.unsqueeze(dim=-1))
@@ -119,6 +118,34 @@ class DistributedLogprob(torch.autograd.Function):
         # if you add an argument to the forward method, then you must add a corresponding None here
         return grad_input, None, None, None, None, None, None
 
+    @staticmethod
+    def backward(
+        ctx,
+        *grad_outputs: torch.Tensor,
+    ) -> tuple[torch.Tensor, None, None, None, None, None, None]:
+        grad_output = grad_outputs[0]
+        softmax, target_mask, masked_target = ctx.saved_tensors
+        B, S, V = softmax.shape
+
+        # 1. 计算需要减 1 的稀疏位置
+        row = torch.arange(B, device=softmax.device).view(-1, 1).expand(-1, S).reshape(-1)
+        col = torch.arange(S, device=softmax.device).expand(B, -1).reshape(-1)
+        flat_idx = (row * S + col) * V
+
+        flat_chosen = flat_idx.masked_select(~target_mask.reshape(-1)) + \
+                    masked_target.masked_select(~target_mask)
+
+        # 2. 创建 grad_input（初始化为 softmax 的负值）
+        grad_input = softmax.neg()  # 等价于 -softmax，不额外 clone
+        grad_input = grad_input.mul_(grad_output.unsqueeze(-1))  # 先乘 grad_output
+
+        # 3. 在稀疏位置加 grad_output（等价于减 1 后的结果）
+        grad_output_selected = grad_output.masked_select(~target_mask)
+        grad_input.view(-1).scatter_add_(
+            0, flat_chosen, grad_output_selected
+        )  # 加 grad_output_selected（即 +1 * grad_output）
+
+        return grad_input, None, None, None, None, None, None
 
 def from_parallel_logits_to_logprobs(
     vocab_parallel_logits: torch.Tensor,

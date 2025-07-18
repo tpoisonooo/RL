@@ -133,14 +133,15 @@ def setup_data(
     )
 
     # Load OpenMathInstruct2Dataset using nemo rl datasets
-    if data_config["dataset_name"] == "OpenMathInstruct-2":
+    dataset_name = data_config["dataset_name"]
+    if "OpenMathInstruct-2" in dataset_name:
         print("Loading nvidia/OpenMathInstruct2Dataset for training and validation")
-        data: Any = OpenMathInstruct2Dataset()
-    elif data_config["dataset_name"] == "DeepScaler":
+        data: Any = OpenMathInstruct2Dataset(repo_id=dataset_name)
+    elif "DeepScaler" in dataset_name:
         print(
             "Loading agentica-org/DeepScaleR-Preview-Dataset for training and validation"
         )
-        data: Any = DeepScalerDataset()
+        data: Any = DeepScalerDataset(repo_id=dataset_name)
     else:
         raise ValueError(f"No processor for dataset {data_config['dataset_name']}.")
 
@@ -189,8 +190,10 @@ def main() -> None:
 
     if not args.config:
         args.config = os.path.join(
-            os.path.dirname(__file__), "configs", "grpo_math_1B.yaml"
+            os.path.dirname(__file__), "configs", "grpo_math_1B_megatron.yaml"
         )
+
+    print(f'########## Running GRPO with config: {args.config} ##########')
 
     config = load_config(args.config)
     print(f"Loaded configuration from: {args.config}")
