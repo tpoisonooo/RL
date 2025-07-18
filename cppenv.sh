@@ -16,3 +16,12 @@ NVCC_APPEND_FLAGS="--threads 56" uv pip install -v \
     --verbose \
     --config-setting '"--build-option=--cpp_ext --cuda_ext --parallel 56"' \
     git+http://ghfast.top/https://github.com/NVIDIA/apex.git@master
+
+
+NVCC_APPEND_FLAGS="--threads 56" uv pip install -v \
+    --disable-pip-version-check \
+    --no-cache-dir \
+    --no-build-isolation \
+    --verbose \
+    --config-setting '"--build-option=--cpp_ext --cuda_ext --parallel 56"' \
+    git+file:///fs-computility/ai4agr/konghuanjun/RL/3rdparty/apex
