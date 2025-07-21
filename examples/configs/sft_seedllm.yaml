@@ -2,10 +2,10 @@
 sft:
   max_num_epochs: 3
   max_num_steps: 1000000
-  val_period: 500
-  val_batches: 4
+  val_period: 5000
+  val_batches: 1
   val_global_batch_size: 32
-  val_micro_batch_size: 2
+  val_micro_batch_size: 1
   val_at_start: true
   seed: 42
 
@@ -15,14 +15,14 @@ checkpointing:
   metric_name: "val_loss"
   higher_is_better: false
   keep_top_k: 100
-  save_period: 500
+  save_period: 5000
 
 policy:
   model_name: "/fs-computility/ai4agr/shared/Qwen2.5-7B-Instruct"
   tokenizer:
     name: ${policy.model_name} ## specify if you'd like to use a tokenizer different from the model's default
-  train_global_batch_size: 32
-  train_micro_batch_size: 2
+  train_global_batch_size: 16
+  train_micro_batch_size: 1
   logprob_batch_size: 1
   max_total_sequence_length: 12288
   precision: "bfloat16"
@@ -34,7 +34,7 @@ policy:
     cpu_offload: false
     sequence_parallel: false
     activation_checkpointing: false
-    tensor_parallel_size: 2
+    tensor_parallel_size: 4
     context_parallel_size: 1
     custom_parallel_plan: null
 
@@ -65,7 +65,7 @@ policy:
     moe_router_load_balancing_type: "none" # "seq_aux_loss" causes logprob error divergence for grpo
     moe_router_bias_update_rate: 0.0 # by default, disable bias updates for grpo
     #gives ~20% training perf speedup with sequence packing 
-    apply_rope_fusion: True
+    apply_rope_fusion: true
     
     optimizer:
       optimizer: "adam"
@@ -131,16 +131,20 @@ data:
 logger:
   log_dir: "logs"  # Base directory for all logs
   wandb_enabled: false # Make sure you do a ``wandb login [Your API key]'' before running
+  swanlab_enabled: true
   tensorboard_enabled: true
   monitor_gpus: false  # If true, will monitor GPU usage and log to wandb and/or tensorboard
+  swanlab:
+    project: "nemo-rl"
+    name: "seedllm0721"
   wandb:
     project: "sft-dev"
     name: "seedllm0718"
   tensorboard:
     log_dir: "seedllm0718"
   gpu_monitoring:
-    collection_interval: 10  # How often to collect GPU usage metrics (in seconds)
-    flush_interval: 10  # How often to flush GPU usage metrics to the loggers (in seconds)
+    collection_interval: 100  # How often to collect GPU usage metrics (in seconds)
+    flush_interval: 100  # How often to flush GPU usage metrics to the loggers (in seconds)
 
 cluster:
   gpus_per_node: 8

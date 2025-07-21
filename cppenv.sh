@@ -9,6 +9,8 @@ export UV_PYTHON_INSTALL_MIRROR="https://mirror.nju.edu.cn/github-release/indygr
 uv python install 3.12.11
 uv sync --extra mcore --verbose
 
+NRL_FORCE_REBUILD_VENVS=true uv run examples/run_grpo.py ...
+
 NVCC_APPEND_FLAGS="--threads 56" uv pip install -v \
     --disable-pip-version-check \
     --no-cache-dir \
@@ -18,10 +20,9 @@ NVCC_APPEND_FLAGS="--threads 56" uv pip install -v \
     git+http://ghfast.top/https://github.com/NVIDIA/apex.git@master
 
 
-NVCC_APPEND_FLAGS="--threads 56" uv pip install -v \
+NVCC_APPEND_FLAGS="--threads 32" uv pip install -v \
     --disable-pip-version-check \
     --no-cache-dir \
     --no-build-isolation \
-    --verbose \
-    --config-setting '"--build-option=--cpp_ext --cuda_ext --parallel 56"' \
+    --config-setting '"--build-option=--cpp_ext --cuda_ext --parallel 32"' \
     git+file:///fs-computility/ai4agr/konghuanjun/RL/3rdparty/apex
