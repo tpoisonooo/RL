@@ -26,3 +26,10 @@ NVCC_APPEND_FLAGS="--threads 32" uv pip install -v \
     --no-build-isolation \
     --config-setting '"--build-option=--cpp_ext --cuda_ext --parallel 32"' \
     git+file:///fs-computility/ai4agr/konghuanjun/RL/3rdparty/apex
+
+NVCC_APPEND_FLAGS="--threads 32" uv pip install -v \
+    --disable-pip-version-check \
+    --no-cache-dir \
+    --no-build-isolation \
+    --config-setting '"--build-option=--cpp_ext --cuda_ext --parallel 32"' \
+    git+file:///fs-computility/ai4agr/konghuanjun/RL/3rdparty/apex

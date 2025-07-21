@@ -8,3 +8,13 @@
 	url = http://ghfast.top/https://github.com/terrykong/Megatron-LM.git
 	branch = sahilj/megatron-external-loss-norm
 	shallow = true
+[submodule "3rdparty/flash-attention"]
+	path = 3rdparty/flash-attention
+	url = http://ghfast.top/https://github.com/tpoisonooo/flash-attention.git
+	branch = support-ghfast
+	shallow = true
+[submodule "3rdparty/apex"]
+	path = 3rdparty/apex
+	url = http://ghfast.top/https://github.com/tpoisonooo/apex.git
+	branch = support-ghfast
+	shallow = true
