@@ -28,10 +28,11 @@ checkpointing:
   metric_name: "val_reward"
   higher_is_better: true
   keep_top_k: 3
-  save_period: 10
+  save_period: 1000
 
 policy:
-  model_name: "/home/data/share/Qwen2.5-1.5B-Instruct"
+  # model_name: "/home/data/share/Qwen2.5-1.5B-Instruct"
+  model_name: "/home/data/share/Qwen2.5-0.5B"
   tokenizer:
     name: ${policy.model_name} ## specify if you'd like to use a tokenizer different from the model's default
   train_global_batch_size: 512
@@ -154,9 +155,13 @@ logger:
   log_dir: "logs"  # Base directory for all logs
   num_val_samples_to_print: 0 # Number of validation samples to pretty print on terminal
   wandb_enabled: false
+  swanlab_enabled: true
   tensorboard_enabled: true
   monitor_gpus: false  # If true, will monitor GPU usage and log to wandb and/or tensorboard
   wandb:
+    project: "grpo-dev"
+    name: "sj_megatron_1B"
+  swanlab:
     project: "grpo-dev"
     name: "sj_megatron_1B"
   tensorboard: {}
@@ -165,5 +170,5 @@ logger:
     flush_interval: 10  # How often to flush GPU usage metrics to the loggers (in seconds)
 
 cluster:
-  gpus_per_node: 4
+  gpus_per_node: 1
   num_nodes: 1
